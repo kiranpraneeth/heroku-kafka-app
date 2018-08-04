@@ -32,5 +32,5 @@
   version = "1.2.0"
 
 [[constraint]]
-  branch = "master"
+  branch = "kg/add_exports"
   name = "github.com/sfdc-pcg/pcgh-golib-core"
