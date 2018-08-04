@@ -42,7 +42,7 @@ func main() {
 
 // This endpoint accesses in memory state gathered
 // by the consumer, which holds the last 10 messages received
-func (kc *KafkaClient) messagesGET(c *gin.Context) {
+func (kc *kafka.Client) messagesGET(c *gin.Context) {
 	kc.ml.RLock()
 	defer kc.ml.RUnlock()
 	c.JSON(http.StatusOK, kc.receivedMessages)
@@ -52,7 +52,7 @@ func (kc *KafkaClient) messagesGET(c *gin.Context) {
 // A sample producer endpoint.
 // It receives messages as http bodies on /messages,
 // and posts them directly to a Kafka topic.
-func (kc *KafkaClient) messagesPOST(c *gin.Context) {
+func (kc *kafka.Client) messagesPOST(c *gin.Context) {
 	message, err := ioutil.ReadAll(c.Request.Body)
 	fmt.Printf("Got message %v", message)
 	if err != nil {
@@ -70,7 +70,7 @@ func (kc *KafkaClient) messagesPOST(c *gin.Context) {
 
 // Consume messages from the topic and buffer the last 10 messages
 // in memory so that the web app can send them back over the API.
-func (kc *KafkaClient) consumeMessages() {
+func (kc *kafka.Client) consumeMessages() {
 	fmt.Printf("Entered consumeMessages")
 	for {
 		select {
@@ -82,7 +82,7 @@ func (kc *KafkaClient) consumeMessages() {
 }
 
 // Save consumed message in the buffer consumed by the /message API
-func (kc *KafkaClient) saveMessage(msg *sarama.ConsumerMessage) {
+func (kc *kafka.Client) saveMessage(msg *sarama.ConsumerMessage) {
 	kc.ml.Lock()
 	defer kc.ml.Unlock()
 	fmt.Printf("Received Message and waiting for greater than 10")
